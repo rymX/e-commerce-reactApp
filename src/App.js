@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Products, Navbar , Cart} from "./components";
+import { Products, Navbar , Cart ,Checkout} from "./components";
 import {
   BrowserRouter as Router,
   Switch,
@@ -26,6 +26,18 @@ const App = () => {
    setcart(item.cart);
   }
   
+  const handleCartQty = async (productId  , quantity)=>{
+    const result = await commerce.cart.update(productId , {quantity});
+    setcart(result.cart)
+  }
+  const handleDeleteFromCart = async (productId)=>{
+    const {cart} = await commerce.cart.remove(productId);
+    setcart(cart)
+  }
+  const handleEmptyCart = async ()=>{
+    const {cart} = await commerce.cart.empty();
+    setcart(cart);
+  }
   useEffect(() => {
     fetchProduct();
     fetchCart();
@@ -45,7 +57,13 @@ const App = () => {
           </Route>
 
           <Route path="/cart">
-          <Cart cart={cart} />
+          <Cart cart={cart}
+          handleCartQty={handleCartQty}
+          handleDeleteFromCart={handleDeleteFromCart}
+          handleEmptyCart={handleEmptyCart} />
+          </Route>
+          <Route exact path='/checkout'>
+            <Checkout cart={cart} />
           </Route>
          
         </Switch>
