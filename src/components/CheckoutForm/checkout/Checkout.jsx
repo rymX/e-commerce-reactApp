@@ -21,7 +21,6 @@ function Checkout({cart}) {
 const generateToken = async () => {
   try{
 const token = await commerce.checkout.generateToken(cart.id , {type : 'cart'});
-console.log(token);
 setCheckoutToken(token)
   }
   catch{}
@@ -32,11 +31,12 @@ const nextStep = ()=> setActiveStep((prevStep)=> prevStep+1) ;
 const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
 const next =(data)=>{
-setShippingDtata(data)
+setShippingDtata(data);
+nextStep();
 }
     
 
-const Form =()=> ( activeStep === 0 ? <AdressForm  checkoutToken={checkoutToken} next={next} /> : <PaymentForm /> )
+const Form =()=> ( activeStep === 0 ? <AdressForm  checkoutToken={checkoutToken} next={next} /> : <PaymentForm checkoutToken={checkoutToken}/> )
 
 const Confirmation=()=>(
   <div>
