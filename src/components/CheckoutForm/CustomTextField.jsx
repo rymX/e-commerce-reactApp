@@ -19,6 +19,7 @@ function CustomTextField({ name, label, required }) {
           error={isError}
         /> */}
         <Controller
+        // defaultValue=""
             control={control}
             name={name}
             render = {({ field})=> (

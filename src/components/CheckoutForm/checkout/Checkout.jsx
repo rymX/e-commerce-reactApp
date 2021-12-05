@@ -10,7 +10,7 @@ import { commerce } from '../../../lib/commerce';
 
 const steps = ['Shipping address', 'Payment details'];
 
-function Checkout({cart}) {
+function Checkout({cart , order , handleCaptureCheckout , error}) {
 
   const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
@@ -23,7 +23,9 @@ const generateToken = async () => {
 const token = await commerce.checkout.generateToken(cart.id , {type : 'cart'});
 setCheckoutToken(token)
   }
-  catch{}
+  catch (error ){
+    console.log(error);
+  }
 }
 generateToken();
   },[cart]);
@@ -36,14 +38,37 @@ nextStep();
 }
     
 
-const Form =()=> ( activeStep === 0 ? <AdressForm  checkoutToken={checkoutToken} next={next} /> : <PaymentForm checkoutToken={checkoutToken}/> )
+const Form =()=> ( activeStep === 0 ? <AdressForm  checkoutToken={checkoutToken} next={next} /> : <PaymentForm checkoutToken={checkoutToken} shippingData={shippingData} backStep={backStep} handleCaptureCheckout={handleCaptureCheckout} nextStep={nextStep}/> )
 
-const Confirmation=()=>(
-  <div>
-    Confirmation
+let Confirmation=()=> order.customer ? (
+ <>
+ <div>
+   <Typography variant='h5' >
+     thank you {order.customer.firstname} {order.customer.lastname} 
+   </Typography>
+   <Divider className={classes.divider} />
+   <Typography variant="subtitle2"  >
+     order ref:{order.customer_reference}
+   </Typography>
+   <br />
+   <Button component={Link}  to="/" variant="outlined"> Back to home </Button>
+   </div>
+ </>
+) : (
+  <div className={classes.spinner} >
+    <CircularProgress /> 
   </div>
 )
-
+if (error){
+  <>
+  <Typography variant="h5">
+    error : {error}
+    <br />
+   <Button component={Link}  to="/" variant="outlined"> Back to home </Button>
+    
+  </Typography>
+  </>
+}
     return (
         <>
       <CssBaseline />
