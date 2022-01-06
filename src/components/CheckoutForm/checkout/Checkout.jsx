@@ -4,18 +4,19 @@ import { Link, useHistory } from 'react-router-dom';
 import useStyles from './styles';
 import AdressForm from '../AdressForm'
 import PaymentForm from '../PaymentForm'
-
-
 import { commerce } from '../../../lib/commerce';
+
 
 const steps = ['Shipping address', 'Payment details'];
 
 function Checkout({cart , order , handleCaptureCheckout , error}) {
 
   const classes = useStyles();
-    const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [shippingData , setShippingDtata]= useState({})
+  const history = useHistory();
+  // const [isFinished , setIsFinished] = useState(false);
 
   useEffect(()=>{
 const generateToken = async () => {
@@ -24,7 +25,8 @@ const token = await commerce.checkout.generateToken(cart.id , {type : 'cart'});
 setCheckoutToken(token)
   }
   catch (error ){
-    console.log(error);
+    // if (activeStep !== steps.length) history.push('/');
+    history.push('/')
   }
 }
 generateToken();
@@ -32,13 +34,23 @@ generateToken();
 const nextStep = ()=> setActiveStep((prevStep)=> prevStep+1) ;
 const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
+// set shipping data and move to next step -- payment
 const next =(data)=>{
 setShippingDtata(data);
 nextStep();
 }
+// to avoid spinner for long time 
+// const timeout =()=>{
+//   setTimeout(()=>{
+//     setIsFinished(true)
+//   }, 3000)
+
+// }
     
 
-const Form =()=> ( activeStep === 0 ? <AdressForm  checkoutToken={checkoutToken} next={next} /> : <PaymentForm checkoutToken={checkoutToken} shippingData={shippingData} backStep={backStep} handleCaptureCheckout={handleCaptureCheckout} nextStep={nextStep}/> )
+const Form =()=> ( activeStep === 0 
+  ? <AdressForm  checkoutToken={checkoutToken} next={next} /> 
+  : <PaymentForm checkoutToken={checkoutToken} shippingData={shippingData} backStep={backStep} handleCaptureCheckout={handleCaptureCheckout} nextStep={nextStep}/> )
 
 let Confirmation=()=> order.customer ? (
  <>
@@ -58,7 +70,8 @@ let Confirmation=()=> order.customer ? (
   <div className={classes.spinner} >
     <CircularProgress /> 
   </div>
-)
+) 
+ // handle error order 
 if (error){
   <>
   <Typography variant="h5">

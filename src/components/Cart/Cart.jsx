@@ -5,11 +5,11 @@ import CartItem from './CartItem/CratItem';
 import useStyles from './styles';
 
 
-function Cart( { cart , handleCartQty ,handleDeleteFromCart, handleEmptyCart }) {
-    console.log(cart);
+function Cart( { cart , handleUpdateCartQty ,handleDeleteFromCart, handleEmptyCart }) {
  
     const classes =useStyles();
 
+    // to be rendred when cart is empty 
     const EmptyCart=()=>
         (
                <Typography variant="subtitle1"  > you have no item in your cart , start adding Some !  <Link to='/' >Start Adding Some </Link> 
@@ -17,14 +17,16 @@ function Cart( { cart , handleCartQty ,handleDeleteFromCart, handleEmptyCart }) 
                 
         );
     
-    if (!cart.line_items) return"Loding...";
+    if (!cart.line_items) return "Loding...";
+
+    // to be rendred when cart is not empty
     const FilledCart=() =>
         (
             <>
        <Grid container spacing={3} >
            { cart.line_items.map((item)=>(
                <Grid item xs={12} sm={4} Key={item.id}>
-                  <CartItem item={item} handleCartQty={handleCartQty}
+                  <CartItem item={item} handleUpdateCartQty={handleUpdateCartQty}
           handleDeleteFromCart={handleDeleteFromCart} />
                </Grid>
            ))}

@@ -34,6 +34,9 @@ function PaymentForm({checkoutToken ,shippingData , backStep , handleCaptureChec
           },
       }
       handleCaptureCheckout(checkoutToken.id , orderData); 
+
+    
+
       nextStep();
     }
   }

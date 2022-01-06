@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 
 import { commerce } from '../../lib/commerce';
 import FormInput from './CustomTextField';
-import { NextWeek } from '@material-ui/icons';
-
 
 function AdressForm({checkoutToken , next}) {
     const methods = useForm();
@@ -20,10 +18,9 @@ function AdressForm({checkoutToken , next}) {
 
     const fetchShippingCountries = async (checkoutTokenId) => {
         const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
-    console.log(countries);
         setShippingCountries(countries);
+        // i chose 2 for tunisia 
         setShippingCountry(Object.keys(countries)[2]);
-        console.log(Object.keys(countries)[0]);
       };
 
       const fetchSubdivisions = async (countryCode) => {
@@ -55,7 +52,7 @@ function AdressForm({checkoutToken , next}) {
       <Typography variant="h6" gutterBottom>Shipping address</Typography>
       <FormProvider {...methods}>
 
-        <form onSubmit={methods.handleSubmit((data)=> next({...data , shippingCountry , shippingSubdivision , setShippingOption}) )}>
+        <form onSubmit={methods.handleSubmit((data)=> next({...data , shippingCountry , shippingSubdivision , shippingOption}) )}>
           <Grid container spacing={3}>
               <FormInput required name='firstname' label='First name' />
               <FormInput required name='lastname' label='Last name' />

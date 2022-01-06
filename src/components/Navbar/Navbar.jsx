@@ -27,6 +27,7 @@ const Navbar = ( { totalItems }  ) => {
                     <div className={classes.grow}>
 
                     </div>
+                    {/* display cart badg only for home components  */}
                     {location.pathname === '/' && ( <div className={classes.button}>
                         <IconButton component={Link} to="/cart" aria-label="show cart items" color="inherit">
                             <Badge badgeContent={totalItems} color="secondary" >
